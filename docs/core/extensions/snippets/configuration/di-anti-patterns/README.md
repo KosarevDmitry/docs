@@ -1,0 +1,1 @@
+# extensions, configuration, di-anti-patterns

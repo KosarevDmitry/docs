@@ -1,0 +1,1 @@
+# orleans, deployment, service-fabric, stateless

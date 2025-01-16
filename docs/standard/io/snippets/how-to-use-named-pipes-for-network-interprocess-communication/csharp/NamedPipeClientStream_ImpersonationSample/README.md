@@ -1,0 +1,1 @@
+# io, how-to-use-named-pipes-for-network-interprocess-communication, NamedPipeClientStream_ImpersonationSample

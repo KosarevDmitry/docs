@@ -1,0 +1,1 @@
+# roslyn-sdk, how-to-write-csharp-analyzer-code-fix, MakeConst, MakeConst.Test

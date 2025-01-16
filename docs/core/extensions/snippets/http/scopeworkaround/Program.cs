@@ -3,7 +3,6 @@
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserContext>();
-
 builder.Services.AddHttpClient("backend")
     .AddScopeAwareHttpHandler<AuthenticatingHandler>();
 

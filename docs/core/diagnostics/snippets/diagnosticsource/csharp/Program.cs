@@ -9,7 +9,7 @@ Client.SendWebRequest("https://learn.microsoft.com/dotnet/core/diagnostics/");
 class HTTPClient
 {
     // <Snippet1>
-    private static DiagnosticSource httpLogger = new DiagnosticListener("System.Net.Http");
+    private static DiagnosticSource httpLogger = new DiagnosticListener("Boo");
     // </Snippet1>
     public byte[] SendWebRequest(string url)
     {
@@ -17,6 +17,8 @@ class HTTPClient
         if (httpLogger.IsEnabled("RequestStart"))
         {
             httpLogger.Write("RequestStart", new { Url = url });
+            httpLogger.Write("SomeEvent", new { A=1, B=2 });
+            httpLogger.Write("SomeEvent1", new string[]{ "A","B" });
         }
         // </Snippet3>
         //Pretend this sends an HTTP request to the url and gets back a reply.
@@ -49,13 +51,21 @@ class MyListener
     {
         Action<KeyValuePair<string, object>> whenHeard = delegate (KeyValuePair<string, object> data)
         {
-            Console.WriteLine($"Data received: {data.Key}: {data.Value}");
+            if (data.Value is string[] s)
+            {
+                Console.WriteLine($"Data received: {data.Key}: {String.Join(',', s)}");  
+            }
+            else
+            {
+                Console.WriteLine($"Data received: {data.Key}: {data.Value}");
+            }
         };
+        
         Action<DiagnosticListener> onNewListener = delegate (DiagnosticListener listener)
         {
             Console.WriteLine($"New Listener discovered: {listener.Name}");
             //Subscribe to the specific DiagnosticListener of interest.
-            if (listener.Name == "System.Net.Http")
+            if (listener.Name == "Boo")
             {
                 //Use lock to ensure the callback code is thread safe.
                 lock (allListeners)

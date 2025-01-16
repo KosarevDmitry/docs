@@ -23,9 +23,12 @@ class Program
     {
         MyBaseClass b = new MyBaseClass();
         MyDerivedClass d = new MyDerivedClass();
+        MyBaseClass c = new MyDerivedClass();
 
         Console.WriteLine("Base Method One: {0}", b.MethodOne());
         Console.WriteLine("Derived Method One: {0}", d.MethodOne());
+        Console.WriteLine("Derived Method One: {0}", c.MethodOne());
+
     }
 #endregion
 }

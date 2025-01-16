@@ -1,0 +1,1 @@
+# diagnostics, Microsoft.Diagnostics.NETCore.Client

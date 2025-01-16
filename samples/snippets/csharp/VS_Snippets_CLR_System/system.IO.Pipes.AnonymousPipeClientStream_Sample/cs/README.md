@@ -1,0 +1,1 @@
+# system.IO.Pipes.AnonymousPipeClientStream_Sample

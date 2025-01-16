@@ -1,0 +1,1 @@
+# library-with-visual-studio, StringLibraryTestNet8

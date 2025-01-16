@@ -1,0 +1,1 @@
+# assembly, inspect-contents-using-metadataloadcontext

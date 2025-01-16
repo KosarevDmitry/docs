@@ -12,12 +12,16 @@ public sealed class MinimalEventCounterSource : EventSource
         {
             DisplayName = "Request Processing Time",
             DisplayUnits = "ms"
+
         };
 
     public void Request(string url, long elapsedMilliseconds)
     {
         WriteEvent(1, url, elapsedMilliseconds);
         _requestCounter?.WriteMetric(elapsedMilliseconds);
+
+
+
     }
 
     protected override void Dispose(bool disposing)

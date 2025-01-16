@@ -1,0 +1,4 @@
+# diagnostics, health-checks
+AddResourceMonitoring добавляет метрики
+AddHealthChecks регистрирует HealthCheckService
+CheckHealthAsync вызывает тест возвращает результат

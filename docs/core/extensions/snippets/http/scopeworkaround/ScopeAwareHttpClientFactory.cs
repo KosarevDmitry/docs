@@ -43,6 +43,7 @@ public class ScopeAwareHttpClientFactory : IHttpClientFactory
             }
 
             // Create top-most delegating handler with scoped dependencies
+            // scopeAwareHandler is transinient; each call returns new object;
             scopeAwareHandler = (DelegatingHandler)_scopeServiceProvider.GetRequiredService(scopeAwareHandlerType); // should be transient
             if (scopeAwareHandler.InnerHandler != null)
             {
@@ -54,12 +55,14 @@ public class ScopeAwareHttpClientFactory : IHttpClientFactory
         }
 
         // Get or create HttpMessageHandler from HttpClientFactory
+        //  each call returns the same  object;
         HttpMessageHandler handler = _httpMessageHandlerFactory.CreateHandler(name);
 
         if (scopeAwareHandler != null)
         {
             scopeAwareHandler.InnerHandler = handler;
             handler = scopeAwareHandler;
+            // transinient get scoped inner handler
         }
 
         HttpClient client = new(handler);
@@ -86,7 +89,7 @@ public static class ScopeAwareHttpClientBuilderExtensions
     public static IHttpClientBuilder AddScopeAwareHttpHandler<THandler>(
         this IHttpClientBuilder builder) where THandler : DelegatingHandler
     {
-        builder.Services.TryAddTransient<THandler>();
+        builder.Services.TryAddTransient<THandler>(); // this Transient
         if (!builder.Services.Any(sd => sd.ImplementationType == typeof(ScopeAwareHttpClientFactory)))
         {
             // Override default IHttpClientFactory registration
@@ -94,7 +97,7 @@ public static class ScopeAwareHttpClientBuilderExtensions
         }
 
         builder.Services.Configure<ScopeAwareHttpClientFactoryOptions>(
-            builder.Name, options => options.HttpHandlerType = typeof(THandler));
+            builder.Name, options => options.HttpHandlerType = typeof(THandler)); // and this Transient too
 
         return builder;
     }

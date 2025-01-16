@@ -1,11 +1,22 @@
 ﻿using System.Diagnostics.Tracing;
 
-using var listener = new SystemDotNetListener();
+var path = $"D:\\temp\\snippets-{AppDomain.CurrentDomain.FriendlyName}-EventListener.log";
+if (File.Exists(path))
+    File.Delete(path);
+
+var stream=  File.Open(path, FileMode.Create);
+StreamWriter sw = new (stream) {AutoFlush = true};
+using var listener = new SystemDotNetListener(sw);
+
 using var client = new HttpClient();
 string? json = await client.GetStringAsync("https://httpbin.org/get");
 
+sw.Close();
 sealed file class SystemDotNetListener : EventListener
 {
+    private StreamWriter sw;
+    public SystemDotNetListener(StreamWriter sw)=> this.sw = sw;
+
     protected override void OnEventSourceCreated(EventSource eventSource)
     {
         if (eventSource.Name.Contains("System.Net"))
@@ -16,8 +27,8 @@ sealed file class SystemDotNetListener : EventListener
 
     protected override void OnEventWritten(EventWrittenEventArgs eventData)
     {
-        Console.WriteLine($"{DateTime.UtcNow:ss:fff} {eventData.EventSource.Name}/{eventData.EventName}: " +
+        sw.WriteLine($"{DateTime.UtcNow:ss:fff} {eventData.EventSource.Name}/{eventData.EventName}: " +
             string.Join(' ', eventData.PayloadNames!.Zip(eventData.Payload!)
-                .Select(pair => $"{pair.First}={(pair.Second is byte[] buffer ? Convert.ToHexString(buffer) : $"{pair.Second}")}")));
+            .Select(pair => $"{pair.First}={(pair.Second is byte[] buffer ? Convert.ToHexString(buffer) : $"{pair.Second}")}")));
     }
 }

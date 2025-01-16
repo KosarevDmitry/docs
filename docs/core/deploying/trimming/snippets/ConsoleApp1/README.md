@@ -1,0 +1,1 @@
+# deploying, trimming, ConsoleApp1

@@ -4,6 +4,7 @@ class Program
 {
     static async Task Main()
     {
+
         await WriteText.Example.ProcessWriteAsync();
         await WriteText.Example.SimpleWriteAsync();
 
@@ -12,6 +13,8 @@ class Program
 
         await ParallelWriteText.Example.ProcessMultipleWritesAsync();
         await ParallelWriteText.Example.SimpleParallelWriteAsync();
+        // with ContinueWith
+        await ParallelWriteText.Example.My_ProcessMultipleWritesAsync();
     }
 }
 
@@ -176,4 +179,39 @@ class ParallelWriteText
         }
     }
     // </ParallelWriteText>
+
+
+    public async Task My_ProcessMultipleWritesAsync()
+    {
+        try
+        {
+            string folder = Directory.CreateDirectory("tempfolder").Name;
+            IList<Task> writeTaskList = new List<Task>();
+
+            for (int index = 21; index <= 30; ++ index)
+            {
+                string fileName = $"file-{index:00}.txt";
+                string filePath = $"{folder}/{fileName}";
+
+                string text = $"In file {index}{Environment.NewLine}";
+                byte[] encodedText = Encoding.Unicode.GetBytes(text);
+
+                var sourceStream =
+                    new FileStream(
+                        filePath,
+                        FileMode.Create, FileAccess.Write, FileShare.None,
+                        bufferSize: 4096, useAsync: true);
+
+                Task writeTask = Task.Run (()=>
+                    sourceStream.WriteAsync(encodedText, 0, encodedText.Length)
+                    .ContinueWith(t=>sourceStream.Close())
+                );
+                writeTaskList.Add(writeTask);
+            }
+            await Task.WhenAll(writeTaskList);
+        }
+        catch(Exception e)
+        {
+        }
+    }
 }

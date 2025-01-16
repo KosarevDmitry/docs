@@ -1,0 +1,1 @@
+# library-with-visual-studio-6-0, StringLibrary

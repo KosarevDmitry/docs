@@ -1,0 +1,1 @@
+# framework, windows-services, MyNewService

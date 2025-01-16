@@ -1,0 +1,1 @@
+# classes-and-structs, how-to-declare-and-use-read-write-properties

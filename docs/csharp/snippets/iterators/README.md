@@ -1,0 +1,4 @@
+# iterators
+IEnumerable,
+IAsyncEnumerable
+GetEnumerator
